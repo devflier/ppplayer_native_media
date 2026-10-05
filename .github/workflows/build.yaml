@@ -1,62 +1,35 @@
-name: Build libmpv-android
-
+name: Validate ppplayer Android native media
 on:
-  push:
-    branches:
-      - main
-
+  workflow_dispatch:
+  pull_request:
 permissions:
-  contents: write
-
+  contents: read
 jobs:
   build:
-    name: Build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup Java JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-      - name: Symlink SDK
-        working-directory: ./buildscripts
+      - uses: actions/checkout@v4
+      - name: Install host build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential autoconf automake libtool pkg-config meson ninja-build nasm cmake unzip python3
+      - name: Fetch pinned sources and tools
+        run: bash scripts/bootstrap_android.sh
+      - name: Test actual EGL context function
+        run: python3 scripts/test_egl_fallback.py
+      - name: Build and package emulator library
         run: |
-          mkdir sdk
-          ln -s ${ANDROID_HOME} ./sdk/android-sdk-linux
-      - name: Bundle (default)
-        working-directory: ./buildscripts
+          PPPLAYER_BUILD_JOBS=2 bash scripts/build_android.sh x86_64
+          python3 scripts/package_android.py --abi x86_64
+      - name: Build and package device library
         run: |
-          sudo chmod +x bundle_default.sh
-          ./bundle_default.sh
-      # TODO(alexmercerind): Figure out this shit.
-      # - name: Bundle (full)
-      #   working-directory: ./buildscripts
-      #   run: |
-      #     sudo chmod +x bundle_full.sh
-      #     ./bundle_full.sh
-      # - name: Bundle (encoders-gpl)
-      #   working-directory: ./buildscripts
-      #   run: |
-      #     sudo chmod +x bundle_encoders-gpl.sh
-      #     ./bundle_encoders-gpl.sh
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+          PPPLAYER_BUILD_JOBS=2 bash scripts/build_android.sh arm64
+          python3 scripts/package_android.py --abi arm64-v8a
+      - uses: actions/upload-artifact@v4
         with:
-          name: artifact
+          name: ppplayer-android-native-candidate
           path: |
-            ./buildscripts/*.jar
-            ./buildscripts/deps/media-kit-android-helper/app/build/outputs/apk/release/*.jar
-      - name: Upload Release
-        uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/main'
-        with:
-          draft: true
-          prerelease: false
-          tag_name: "vnext"
-          files: |
-            buildscripts/*.zip
-            buildscripts/deps/media-kit-android-helper/app/build/outputs/apk/release/*.jar
+            artifacts/ppplayer-*.jar
+            artifacts/manifest.json
+            sources.lock.json
+            buildscripts/patches/
+          if-no-files-found: error

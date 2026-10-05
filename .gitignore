@@ -10,3 +10,12 @@ obj
 build
 local.properties
 *~
+
+/artifacts/
+/buildscripts/deps/
+/buildscripts/prefix/
+/buildscripts/sdk/
+/.work/
+/*.log
+__pycache__/
+*.pyc

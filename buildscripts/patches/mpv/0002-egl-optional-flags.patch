@@ -1,0 +1,22 @@
+diff --git a/video/out/opengl/egl_helpers.c b/video/out/opengl/egl_helpers.c
+index 3bf6239..eba1b41 100644
+--- a/video/out/opengl/egl_helpers.c
++++ b/video/out/opengl/egl_helpers.c
+@@ -200,6 +200,17 @@ static bool create_context(struct ra_ctx *ctx, EGLDisplay display,
+         };
+ 
+         egl_ctx = eglCreateContext(display, config, EGL_NO_CONTEXT, attrs);
++        // Android emulators may reject optional context flags, even when zero.
++        // Preserve the GLES version request when retrying without those flags.
++        if (!egl_ctx && es) {
++            EGLint fallback_attrs[] = {
++                EGL_CONTEXT_CLIENT_VERSION, 2,
++                EGL_NONE
++            };
++            MP_VERBOSE(ctx, "Retrying GLES context without optional flags.\n");
++            egl_ctx = eglCreateContext(display, config, EGL_NO_CONTEXT,
++                                       fallback_attrs);
++        }
+     }
+ 
+     if (!egl_ctx) {

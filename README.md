@@ -38,18 +38,22 @@ files. `sources.lock.json` records source commits and patch hashes. Packaging
 checks native exports and 16 KiB ELF alignment, verifies the upstream JNI helper,
 and emits deterministic JARs plus a SHA-256 manifest in `artifacts/`.
 
-The Flutter plugin is `packages/media_kit_libs_android_video`. It intentionally
-retains its upstream package name for a private dependency override and has
-`publish_to: none`. Its Gradle task requires both locally built architectures,
-checks the artifact manifest, and never downloads a fallback native library.
-Generated binaries and SDKs are ignored. To use a fresh checkout, build them first.
+The Flutter plugin has been renamed to `ppplayer_media_kit_libs_android_video` so it can be automatically published to pub.dev via GitHub Actions. Its Gradle task requires both locally built architectures, checks the artifact manifest, and never downloads a fallback native library. Generated binaries and SDKs are ignored. To use a fresh checkout, build them first.
 
-For an isolated Flutter app next to this repository, add the following override
-to its existing `dependency_overrides` mapping and run `flutter pub get`:
+For an isolated Flutter app next to this repository, add the following override to its existing `dependency_overrides` mapping and run `flutter pub get`:
 
 ```yaml
+# Local path override for testing:
 media_kit_libs_android_video:
   path: ../ppplayer_native_media/packages/media_kit_libs_android_video
+```
+
+To use the version published to pub.dev instead, configure your override like this:
+```yaml
+media_kit_libs_android_video:
+  hosted:
+    name: ppplayer_media_kit_libs_android_video
+  version: ^1.3.8
 ```
 
 After an app build, verify the shipped libraries (use `--abi x86_64` for an
@@ -76,8 +80,4 @@ from the exact upstream v1.1.7 release; the packaged libmpv is built here. The
 root and plugin licenses remain included. Before distribution, preserve license
 notices and make the corresponding native sources and patches available.
 
-The upstream broad bundle/release scripts are retained for reference; use the
-focused scripts above. CI builds and uploads test artifacts without creating
-GitHub releases. No main app dependency should be changed until the native build and
-emulator acceptance checks pass. Physical ARM64 device testing and macOS/iOS
-validation are separate acceptance gates.
+The upstream broad bundle/release scripts are retained for reference; use the focused scripts above. CI builds automatically validate code and test artifacts. Additionally, pushing a `v*` tag triggers a GitHub Action to automatically publish the `ppplayer_media_kit_libs_android_video` package to pub.dev. No main app dependency should be changed until the native build and emulator acceptance checks pass. Physical ARM64 device testing and macOS/iOS validation are separate acceptance gates.

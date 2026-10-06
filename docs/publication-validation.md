@@ -1,7 +1,8 @@
 # Android package publication validation — 2026-10-06
 
-Candidate: `flutter_media_kit` `1.3.8+ppplayer.egl1`.
-This report records preparation checks; it does not assert pub.dev publication.
+Release: `flutter_media_kit` `1.3.8+ppplayer.egl1`.
+Published successfully to https://pub.dev/packages/flutter_media_kit on 2026-10-06.
+The registry confirms this version and declares the Android plugin only.
 
 * Flutter 3.47.4 / Dart 3.13.3 on Windows.
 * After the user selected `flutter_media_kit`, the renamed example was rebuilt
@@ -29,3 +30,15 @@ an emulator in this pass. Prior playback acceptance used these same native
 binaries; the package README and platform audit distinguish emulator playback
 from pending physical ARM64 and audible-output checks. Other platform binaries
 are absent. The main ppplayer application dependencies remain unchanged.
+
+## Hosted-package consumer verification
+
+A separate consumer app resolved `flutter_media_kit: 1.3.8+ppplayer.egl1` from
+pub.dev without a local path or dependency override. Static analysis and its
+ARM64/x64 debug APK build pass. The downloaded source archive, source lock, both
+JARs, and all four native libraries pass checksum verification. The consumer
+APK's four native libraries match the downloaded package manifest.
+
+Hosted-consumer APK SHA-256: `8202d334ffd9db6f141c1c4a5b6773e4fbde4dbbbd9de2e45ee22b9c5801f56b`.
+This verifies the published package's contents and builds, not a new emulator
+playback or physical-device acceptance run.

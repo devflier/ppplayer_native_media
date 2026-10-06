@@ -1,4 +1,5 @@
 .dart_tool/
+.kotlin/
 pubspec.lock
 build/
 android/.gradle/

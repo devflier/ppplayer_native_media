@@ -10,7 +10,7 @@ import tarfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-PACKAGE = ROOT / 'packages/media_kit_libs_android_video'
+PACKAGE = ROOT / 'packages/flutter_media_kit'
 URLS = {
     'dav1d': 'https://code.videolan.org/videolan/dav1d.git',
     'ffmpeg': 'https://github.com/FFmpeg/FFmpeg.git',

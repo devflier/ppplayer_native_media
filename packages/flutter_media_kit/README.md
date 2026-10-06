@@ -45,7 +45,7 @@ For local development, use this key:
 ```yaml
 dependency_overrides:
   flutter_media_kit:
-    path: ../ppplayer_native_media/packages/media_kit_libs_android_video
+    path: ../ppplayer_native_media/packages/flutter_media_kit
 ```
 
 The package contains both native JARs. It does not download native binaries

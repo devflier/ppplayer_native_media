@@ -4,6 +4,7 @@ gen
 jniLibs
 obj
 .gradle
+.kotlin/
 .idea
 .cxx
 **/*.iml
@@ -21,4 +22,7 @@ __pycache__/
 *.pyc
 .dart_tool/
 pubspec.lock
-/packages/media_kit_libs_android_video/native_sources/corresponding-source.tar.gz
+/packages/flutter_media_kit/native_sources/corresponding-source.tar.gz
+
+# Ignored local caches left by the package directory rename.
+/packages/media_kit_libs_android_video/

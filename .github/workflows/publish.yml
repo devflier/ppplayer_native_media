@@ -24,7 +24,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import os, pathlib, re
-          text = pathlib.Path('packages/media_kit_libs_android_video/pubspec.yaml').read_text()
+          text = pathlib.Path('packages/flutter_media_kit/pubspec.yaml').read_text()
           version = re.search(r'^version:\s*(\S+)', text, re.M).group(1)
           assert os.environ['GITHUB_REF_NAME'] == 'v' + version, 'Tag and package version must match'
           PY
@@ -33,19 +33,19 @@ jobs:
           python3 scripts/prepare_pub_package.py
           python3 scripts/prepare_pub_package.py --verify-only
       - name: Install dependencies
-        working-directory: packages/media_kit_libs_android_video
+        working-directory: packages/flutter_media_kit
         run: flutter pub get
       - name: Validate package contents
-        working-directory: packages/media_kit_libs_android_video
+        working-directory: packages/flutter_media_kit
         run: dart pub publish --dry-run
       - name: Build Android consumer example
-        working-directory: packages/media_kit_libs_android_video/example
+        working-directory: packages/flutter_media_kit/example
         run: |
           flutter pub get
           flutter analyze
           flutter build apk --debug --target-platform android-arm64,android-x64
       - name: Verify libraries shipped in consumer APK
-        run: python3 scripts/verify_apk.py packages/media_kit_libs_android_video/example/build/app/outputs/flutter-apk/app-debug.apk --package packages/media_kit_libs_android_video
+        run: python3 scripts/verify_apk.py packages/flutter_media_kit/example/build/app/outputs/flutter-apk/app-debug.apk --package packages/flutter_media_kit
       - name: Publish package
-        working-directory: packages/media_kit_libs_android_video
+        working-directory: packages/flutter_media_kit
         run: dart pub publish --force

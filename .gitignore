@@ -19,3 +19,6 @@ local.properties
 /*.log
 __pycache__/
 *.pyc
+.dart_tool/
+pubspec.lock
+/packages/media_kit_libs_android_video/native_sources/corresponding-source.tar.gz

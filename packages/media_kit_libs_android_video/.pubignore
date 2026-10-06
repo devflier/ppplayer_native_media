@@ -1,0 +1,7 @@
+.dart_tool/
+pubspec.lock
+build/
+android/.gradle/
+android/local.properties
+**/*.log
+!native_sources/corresponding-source.tar.gz

@@ -4,3 +4,5 @@
 *.yaml text eol=lf
 *.json text eol=lf
 *.gradle text eol=lf
+# Preserve verbatim upstream license whitespace in review checks.
+packages/media_kit_libs_android_video/licenses/* -whitespace

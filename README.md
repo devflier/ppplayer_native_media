@@ -38,23 +38,18 @@ files. `sources.lock.json` records source commits and patch hashes. Packaging
 checks native exports and 16 KiB ELF alignment, verifies the upstream JNI helper,
 and emits deterministic JARs plus a SHA-256 manifest in `artifacts/`.
 
-The Flutter plugin has been renamed to `ppplayer_media_kit_libs_android_video` so it can be automatically published to pub.dev via GitHub Actions. Its Gradle task requires both locally built architectures, checks the artifact manifest, and never downloads a fallback native library. Generated binaries and SDKs are ignored. To use a fresh checkout, build them first.
+The Flutter plugin is named `ppplayer_media_kit_libs_android_video`. Both
+validated Android JARs are committed and distributed with the package. Gradle
+checks their bundled SHA-256 manifest; it never downloads fallback binaries.
+See the [package README](packages/media_kit_libs_android_video/README.md) for
+installation and the [platform audit](docs/platform-support.md) for coverage.
 
-For an isolated Flutter app next to this repository, add the following override to its existing `dependency_overrides` mapping and run `flutter pub get`:
-
-```yaml
-# Local path override for testing:
-media_kit_libs_android_video:
-  path: ../ppplayer_native_media/packages/media_kit_libs_android_video
-```
-
-To use the version published to pub.dev instead, configure your override like this:
-```yaml
-media_kit_libs_android_video:
-  hosted:
-    name: ppplayer_media_kit_libs_android_video
-  version: ^1.3.8
-```
+Depend directly on the new package alongside `media_kit` and `media_kit_video`.
+Remove the original Android provider and the `media_kit_libs_video` umbrella,
+which brings it in transitively. The old-name override shown in earlier revisions
+is invalid: pub requires dependency keys to match the package's declared name.
+For local development, the override key must be
+`ppplayer_media_kit_libs_android_video`.
 
 After an app build, verify the shipped libraries (use `--abi x86_64` for an
 emulator-only debug APK; omit it for the two-architecture release APK):
@@ -75,9 +70,34 @@ match the local artifact hashes. The release APK installs and initializes MediaK
 on Android 16 before its first-run permission request. These automated
 tests verify playback progress, not audible output or physical-device behavior.
 
-Keep upstream license notices and source provenance. The retained JNI helper is
-from the exact upstream v1.1.7 release; the packaged libmpv is built here. The
-root and plugin licenses remain included. Before distribution, preserve license
-notices and make the corresponding native sources and patches available.
+## Publication
 
-The upstream broad bundle/release scripts are retained for reference; use the focused scripts above. CI builds automatically validate code and test artifacts. Additionally, pushing a `v*` tag triggers a GitHub Action to automatically publish the `ppplayer_media_kit_libs_android_video` package to pub.dev. No main app dependency should be changed until the native build and emulator acceptance checks pass. Physical ARM64 device testing and macOS/iOS validation are separate acceptance gates.
+The package includes upstream license notices, the binary/source lock manifest,
+and a complete corresponding source archive with patches and build recipes.
+Prepare that archive and verify the committed JARs before any publication:
+
+```sh
+python3 scripts/prepare_pub_package.py
+python3 scripts/prepare_pub_package.py --verify-only
+cd packages/media_kit_libs_android_video
+flutter pub get
+flutter pub publish --dry-run
+```
+
+The preparation script fetches pinned sources without downloading the NDK or
+rebuilding the already validated JARs. On WSL, `--sources-root` can select an
+existing pinned dependency cache. The generated source archive is excluded from
+Git but included in the pub.dev upload by the package's `.pubignore`.
+
+The first release must be published manually with `flutter pub publish`.
+After the package exists, configure pub.dev Admin automated publishing for this
+repository and matching `v{{version}}` tags. The publishing workflow validates
+the tag, prepares the source kit and verifies the package before using GitHub
+OIDC. A verified publisher can be selected by transferring the new package in
+pub.dev Admin after its first publication.
+
+The upstream broad bundle/release scripts are retained for reference; use the
+focused scripts above. This repository owns Android binaries only. Windows,
+Linux, macOS, iOS and web require separate providers. Physical ARM64 playback,
+audible output, and Android 15 release playback remain acceptance work; see the
+platform audit. No main app dependency is changed by preparing this release.

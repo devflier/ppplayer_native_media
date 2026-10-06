@@ -16,6 +16,35 @@ android {
 }
 
 def abis = ['arm64-v8a', 'x86_64']
+def verifyNativeLibraries = tasks.register('verifyNativeLibraries') {
+    def manifestFile = file('native-manifest.json')
+    def lockFile = file('../native_sources/sources.lock.json')
+    inputs.files(manifestFile, lockFile, abis.collect { file("libs/ppplayer-${it}.jar") })
+    doLast {
+        def digest = { File input ->
+            if (!input.isFile()) throw new GradleException("Missing ppplayer native release file: ${input}")
+            def hash = java.security.MessageDigest.getInstance('SHA-256')
+            input.withInputStream { stream ->
+                byte[] buffer = new byte[65536]
+                int count
+                while ((count = stream.read(buffer)) != -1) hash.update(buffer, 0, count)
+            }
+            hash.digest().encodeHex().toString()
+        }
+        def manifest = new groovy.json.JsonSlurper().parse(manifestFile)
+        if (digest(lockFile) != manifest.sources_lock_sha256) {
+            throw new GradleException('ppplayer native source lock checksum mismatch')
+        }
+        abis.each { abi ->
+            def entry = manifest.abis[abi]
+            if (entry == null || entry.file != "ppplayer-${abi}.jar" ||
+                digest(file("libs/ppplayer-${abi}.jar")) != entry.sha256) {
+                throw new GradleException("ppplayer native JAR checksum mismatch: ${abi}")
+            }
+        }
+    }
+}
+tasks.named('preBuild').configure { dependsOn(verifyNativeLibraries) }
 dependencies {
     implementation files(abis.collect { new File(projectDir, "libs/ppplayer-${it}.jar") })
 }

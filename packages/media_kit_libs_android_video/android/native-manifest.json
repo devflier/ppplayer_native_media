@@ -1,0 +1,18 @@
+{
+  "format": 1,
+  "abis": {
+    "x86_64": {
+      "file": "ppplayer-x86_64.jar",
+      "sha256": "afba48c881e0dfe5560c43dd569c11c7b6d1c9b6176dca660dfe72b51c739fe6",
+      "libmpv_sha256": "bedd975ac732cb6db6e38f2ce9633eeaecac282ceb2e003c9c4c2e50eef78c98",
+      "helper_sha256": "6ca2d827a892b8ddd60df64fab81456ad6fd05180dd6c4a0974549858025abc9"
+    },
+    "arm64-v8a": {
+      "file": "ppplayer-arm64-v8a.jar",
+      "sha256": "88aff51c9173c7becf144793a94b7a9e3cc7ea1d17e03bf6dfffd1fc55ace3ed",
+      "libmpv_sha256": "a6069c840d7df82a100f704df94544b98721d0ce12d9ac4e7d08454831839a62",
+      "helper_sha256": "ab55b1d34665dba8fa7a451e82c466ee71b9698e7da6c9a3cb68a7c0ee7610d4"
+    }
+  },
+  "sources_lock_sha256": "92540ccb96b8fd7a2e073e9ca7ea41a688b9c352f55037fc2179a69ea89dc312"
+}

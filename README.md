@@ -38,7 +38,7 @@ files. `sources.lock.json` records source commits and patch hashes. Packaging
 checks native exports and 16 KiB ELF alignment, verifies the upstream JNI helper,
 and emits deterministic JARs plus a SHA-256 manifest in `artifacts/`.
 
-The Flutter plugin is named `ppplayer_media_kit_libs_android_video`. Both
+The Flutter plugin is named `flutter_media_kit`. Both
 validated Android JARs are committed and distributed with the package. Gradle
 checks their bundled SHA-256 manifest; it never downloads fallback binaries.
 See the [package README](packages/media_kit_libs_android_video/README.md) for
@@ -49,7 +49,7 @@ Remove the original Android provider and the `media_kit_libs_video` umbrella,
 which brings it in transitively. The old-name override shown in earlier revisions
 is invalid: pub requires dependency keys to match the package's declared name.
 For local development, the override key must be
-`ppplayer_media_kit_libs_android_video`.
+`flutter_media_kit`.
 
 After an app build, verify the shipped libraries (use `--abi x86_64` for an
 emulator-only debug APK; omit it for the two-architecture release APK):

@@ -1,15 +1,17 @@
 # Android package publication validation — 2026-10-06
 
-Candidate: `ppplayer_media_kit_libs_android_video` `1.3.8+ppplayer.egl1`.
+Candidate: `flutter_media_kit` `1.3.8+ppplayer.egl1`.
 This report records preparation checks; it does not assert pub.dev publication.
 
 * Flutter 3.47.4 / Dart 3.13.3 on Windows.
+* After the user selected `flutter_media_kit`, the renamed example was rebuilt
+  and the APK library hashes verified again.
 * Runnable Android example resolves the renamed provider directly alongside
   MediaKit and MediaKit Video, without the original native Android provider.
 * Example static analysis passes.
 * Debug APK build passes for ARM64 and x64. Both libmpv binaries and both retained
   JNI helper binaries in the APK match the packaged SHA-256 manifest.
-* APK SHA-256: `ae638cc2f09503e5be92deac94508bf75af62f873bb0c834774f45c4382a0fc6`.
+* APK SHA-256: `8a25af9698bb586471d57a80f7dd781ccf707becd9754fc6235b6bfb5e9e538a`.
 * JAR, inner-library and pinned source-lock verification passes. Missing and
   altered JARs were rejected in isolated negative checks.
 * Corresponding sources, submodule sources, patches, build recipes and license

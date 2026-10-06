@@ -1,6 +1,6 @@
 # Platform support audit
 
-The release package is `ppplayer_media_kit_libs_android_video`. It declares
+The release package is `flutter_media_kit`. It declares
 only an Android Flutter plugin, contains only Android JARs, and has no Windows,
 Linux, macOS, iOS or web implementation. Android build-script targets for other
 architectures are not evidence that those binaries are shipped.

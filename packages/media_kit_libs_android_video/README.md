@@ -1,4 +1,4 @@
-# ppplayer MediaKit native libraries for Android
+# flutter_media_kit - Android native libraries
 
 Android native video and audio libraries for the existing `media_kit` and
 `media_kit_video` Dart APIs. This fork builds pinned libmpv sources with an EGL
@@ -27,7 +27,7 @@ Add `media_kit`, `media_kit_video`, and this package to your app:
 dependencies:
   media_kit: ^1.2.3
   media_kit_video: ^2.0.1
-  ppplayer_media_kit_libs_android_video: 1.3.8+ppplayer.egl1
+  flutter_media_kit: 1.3.8+ppplayer.egl1
 ```
 
 Call `MediaKit.ensureInitialized()` before creating players, following the
@@ -44,7 +44,7 @@ For local development, use this key:
 
 ```yaml
 dependency_overrides:
-  ppplayer_media_kit_libs_android_video:
+  flutter_media_kit:
     path: ../ppplayer_native_media/packages/media_kit_libs_android_video
 ```
 
